@@ -22,8 +22,8 @@ var RandomFunc = function.New(&function.Spec{
 var RandIntFunc = function.New(&function.Spec{
 	Description: "Returns a random integer N such that a <= N <= b",
 	Params: []function.Parameter{
-		{Name: "a", Type: cty.Number},
-		{Name: "b", Type: cty.Number},
+		{Name: "a", Type: cty.Number, Description: "Lower bound, inclusive (truncated to an integer)"},
+		{Name: "b", Type: cty.Number, Description: "Upper bound, inclusive (truncated to an integer); must be >= a"},
 	},
 	Type: function.StaticReturnType(cty.Number),
 	Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
@@ -40,8 +40,8 @@ var RandIntFunc = function.New(&function.Spec{
 var RandUniformFunc = function.New(&function.Spec{
 	Description: "Returns a random float N such that a <= N <= b",
 	Params: []function.Parameter{
-		{Name: "a", Type: cty.Number},
-		{Name: "b", Type: cty.Number},
+		{Name: "a", Type: cty.Number, Description: "Lower bound, inclusive"},
+		{Name: "b", Type: cty.Number, Description: "Upper bound, inclusive; must be >= a"},
 	},
 	Type: function.StaticReturnType(cty.Number),
 	Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
@@ -59,8 +59,8 @@ var RandUniformFunc = function.New(&function.Spec{
 var RandGaussFunc = function.New(&function.Spec{
 	Description: "Returns a random float from a Gaussian distribution with the given mean and standard deviation",
 	Params: []function.Parameter{
-		{Name: "mu", Type: cty.Number},
-		{Name: "sigma", Type: cty.Number},
+		{Name: "mu", Type: cty.Number, Description: "Mean of the distribution"},
+		{Name: "sigma", Type: cty.Number, Description: "Standard deviation of the distribution"},
 	},
 	Type: function.StaticReturnType(cty.Number),
 	Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {

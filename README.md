@@ -21,48 +21,52 @@ funcs := randcty.GetRandomFunctions()
 // funcs is map[string]function.Function — merge into your eval context
 ```
 
+The functions are namespaced under `rand::` (e.g. `rand::int`, `rand::choice`). HCL
+parses `a::b(x)` natively as a single flat map key, so no special handling is needed —
+the keys of the returned map simply contain `::`.
+
 ## Functions
 
 ### Scalar Functions
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
-| `random` | `random() number` | Returns a random float in `[0.0, 1.0)` |
-| `randint` | `randint(a, b number) number` | Returns a random integer N such that `a <= N <= b` (inclusive) |
-| `randuniform` | `randuniform(a, b number) number` | Returns a random float N such that `a <= N <= b` |
-| `randgauss` | `randgauss(mu, sigma number) number` | Returns a random float from a Gaussian distribution with mean `mu` and standard deviation `sigma` |
+| `rand::float` | `rand::float() number` | Returns a random float in `[0.0, 1.0)` |
+| `rand::int` | `rand::int(a, b number) number` | Returns a random integer N such that `a <= N <= b` (inclusive) |
+| `rand::uniform` | `rand::uniform(a, b number) number` | Returns a random float N such that `a <= N <= b` |
+| `rand::gauss` | `rand::gauss(mu, sigma number) number` | Returns a random float from a Gaussian distribution with mean `mu` and standard deviation `sigma` |
 
-#### `random()`
+#### `rand::float()`
 
 Returns a uniformly distributed random float in `[0.0, 1.0)`.
 
 ```hcl
-x = random()  # e.g. 0.7342819...
+x = rand::float()  # e.g. 0.7342819...
 ```
 
-#### `randint(a, b)`
+#### `rand::int(a, b)`
 
 Returns a uniformly distributed random integer N such that `a <= N <= b`. Both endpoints are inclusive. Returns an error if `b < a`.
 
 ```hcl
-die = randint(1, 6)   # 1, 2, 3, 4, 5, or 6
+die = rand::int(1, 6)   # 1, 2, 3, 4, 5, or 6
 ```
 
-#### `randuniform(a, b)`
+#### `rand::uniform(a, b)`
 
 Returns a uniformly distributed random float N such that `a <= N <= b`. Returns an error if `b < a`.
 
 ```hcl
-temp = randuniform(36.0, 38.0)
+temp = rand::uniform(36.0, 38.0)
 ```
 
-#### `randgauss(mu, sigma)`
+#### `rand::gauss(mu, sigma)`
 
 Returns a random float sampled from a Gaussian (normal) distribution with the given mean `mu` and standard deviation `sigma`.
 
 ```hcl
-noise = randgauss(0.0, 1.0)   # standard normal
-value = randgauss(100.0, 15.0) # IQ-like distribution
+noise = rand::gauss(0.0, 1.0)   # standard normal
+value = rand::gauss(100.0, 15.0) # IQ-like distribution
 ```
 
 ---
@@ -71,32 +75,32 @@ value = randgauss(100.0, 15.0) # IQ-like distribution
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
-| `randchoice` | `randchoice(list) element` | Returns a random element from a list |
-| `randsample` | `randsample(list, k number) list` | Returns k unique random elements (without replacement) |
-| `randshuffle` | `randshuffle(list) list` | Returns a shuffled copy of the list |
+| `rand::choice` | `rand::choice(list) element` | Returns a random element from a list |
+| `rand::sample` | `rand::sample(list, k number) list` | Returns k unique random elements (without replacement) |
+| `rand::shuffle` | `rand::shuffle(list) list` | Returns a shuffled copy of the list |
 
-#### `randchoice(list)`
+#### `rand::choice(list)`
 
 Returns a single randomly selected element from `list`. The return type matches the element type of the list. Returns an error if the list is empty.
 
 ```hcl
-color = randchoice(["red", "green", "blue"])
+color = rand::choice(["red", "green", "blue"])
 ```
 
-#### `randsample(list, k)`
+#### `rand::sample(list, k)`
 
 Returns a new list of `k` unique elements drawn from `list` without replacement, in random order. Returns an error if `k < 0` or `k > len(list)`. Returns an empty list if `k == 0`.
 
 ```hcl
-winners = randsample(["alice", "bob", "carol", "dave"], 2)
+winners = rand::sample(["alice", "bob", "carol", "dave"], 2)
 ```
 
-#### `randshuffle(list)`
+#### `rand::shuffle(list)`
 
 Returns a shuffled copy of `list`. The original list is not modified. Returns an empty list if the input is empty.
 
 ```hcl
-deck = randshuffle(["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"])
+deck = rand::shuffle(["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"])
 ```
 
 ---
@@ -104,5 +108,5 @@ deck = randshuffle(["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q",
 ## Notes
 
 - All randomness uses Go's `math/rand` package (automatically seeded in Go 1.20+).
-- `randint` and `randuniform` truncate float arguments to `int64` and `float64` respectively.
+- `rand::int` and `rand::uniform` truncate float arguments to `int64` and `float64` respectively.
 - List functions preserve the element type of the input list.

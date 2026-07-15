@@ -12,7 +12,7 @@ import (
 var RandChoiceFunc = function.New(&function.Spec{
 	Description: "Returns a random element from a list",
 	Params: []function.Parameter{
-		{Name: "list", Type: cty.List(cty.DynamicPseudoType)},
+		{Name: "list", Type: cty.List(cty.DynamicPseudoType), Description: "The list to pick from; must not be empty"},
 	},
 	Type: func(args []cty.Value) (cty.Type, error) {
 		listTy := args[0].Type()
@@ -38,8 +38,8 @@ var RandChoiceFunc = function.New(&function.Spec{
 var RandSampleFunc = function.New(&function.Spec{
 	Description: "Returns k unique random elements from a list",
 	Params: []function.Parameter{
-		{Name: "list", Type: cty.List(cty.DynamicPseudoType)},
-		{Name: "k", Type: cty.Number},
+		{Name: "list", Type: cty.List(cty.DynamicPseudoType), Description: "The list to sample from (without replacement)"},
+		{Name: "k", Type: cty.Number, Description: "How many elements to return; 0 <= k <= length(list)"},
 	},
 	Type: func(args []cty.Value) (cty.Type, error) {
 		listTy := args[0].Type()
@@ -78,7 +78,7 @@ var RandSampleFunc = function.New(&function.Spec{
 var RandShuffleFunc = function.New(&function.Spec{
 	Description: "Returns a shuffled copy of a list",
 	Params: []function.Parameter{
-		{Name: "list", Type: cty.List(cty.DynamicPseudoType)},
+		{Name: "list", Type: cty.List(cty.DynamicPseudoType), Description: "The list to shuffle (a new list is returned; the input is unchanged)"},
 	},
 	Type: func(args []cty.Value) (cty.Type, error) {
 		return args[0].Type(), nil
