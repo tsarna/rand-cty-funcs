@@ -1,3 +1,4 @@
+// Deprecated: merged into github.com/tsarna/ctyx as github.com/tsarna/ctyx/randcty.
 module github.com/tsarna/rand-cty-funcs
 
 go 1.25.8
